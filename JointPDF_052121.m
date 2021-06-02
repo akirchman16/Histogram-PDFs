@@ -21,7 +21,7 @@ L_Total = 2;    %total concentration of RAD51
 k_on = 1;   %kinetic rate constant
 k_off = 1;
 Ratio = 1;   %Percentage of solution which is monomers (0 to 1)
-Iterations = 1000;    %number of iterations at each ratio value
+Iterations = 100;    %number of iterations at each ratio value
 
 UncoveredLength = 0.34; %length of a DNA nt without RAD51 bound to it (according to van der Heijden paper) - nm
 CoveredLength = 0.51;   %length of a DNA nt where RAD51 is bound - nm
