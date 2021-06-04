@@ -21,7 +21,7 @@ L_Total = 2;    %total concentration of RAD51
 k_on = 1;   %kinetic rate constant
 k_off = 1;
 Ratio = 1;   %Percentage of solution which is monomers (0 to 1)
-Iterations = 10;    %number of iterations at each ratio value
+Iterations = 100;    %number of iterations at each ratio value
 
 UncoveredLength = 0.34; %length of a DNA nt without RAD51 bound to it (according to van der Heijden paper) - nm
 CoveredLength = 0.51;   %length of a DNA nt where RAD51 is bound - nm
@@ -222,7 +222,7 @@ t_1Row = reshape(t,[1,numel(t)]); %creates 1-Row array of all time values across
 FracCover_1Row(find(FracCover_1Row == 0, numel(find(FracCover_1Row == 0))-Iterations)) = [];    %clears all extra zeros (should only be intitial zeros)
 t_1Row(find(t_1Row == 0, numel(find(t_1Row == 0))-Iterations)) = [];    %clears extra time zeros
 
-numBins = 500;   %adjusts the number of bins in all future histograms
+numBins = 50;   %adjusts the number of bins in all future histograms
 
 figure(2);
 scatterhist(t_1Row,FracCover_1Row,'NBins',numBins,'Location','SouthWest','Direction','out','Marker','.','MarkerSize',1);
