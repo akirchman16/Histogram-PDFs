@@ -223,10 +223,10 @@ FracCover_1Row(find(FracCover_1Row == 0, numel(find(FracCover_1Row == 0))-Iterat
 t_1Row(find(t_1Row == 0, numel(find(t_1Row == 0))-Iterations)) = [];    %clears extra time zeros
 
 numBins_t = ceil(sqrt(numel(t_1Row)));   %number of bins for time histograms
-numBins_FracCover = ceil(sqrt(numel(FracCover_1Row)));  %number of bins for FracCover histograms
+numBins_FracCover = ceil(sqrt(numel(FracCover_1Row)));  %number of b
 
 figure(2);
-scatterhist(t_1Row,FracCover_1Row,'NBins',[numBins_t,numBins_FracCover],'Location','SouthWest','Direction','out','Marker','.','MarkerSize',1);
+scatterhist(t_1Row,FracCover_1Row,'NBins',numBins,'Location','SouthWest','Direction','out','Marker','.','MarkerSize',1);
 hold on;
 xlabel('Time, t');
 ylabel('Saturation');
@@ -234,7 +234,7 @@ title('Saturation of DNA Lattice');
 
 figure(3);
 subplot(2,1,1);
-h1 = histfit(t_1Row,numBins_t);
+h1 = histfit(t_1Row,numBins,'kernel');
 hold on;
 yt1 = get(gca,'YTick');
 set(gca,'YTick',yt1,'YTickLabel',yt1/numel(t_1Row));
@@ -242,7 +242,7 @@ xlim([0 inf]);
 xlabel('Time, t');
 ylabel('Probability');
 subplot(2,1,2);
-h2 = histfit(FracCover_1Row,numBins_FracCover);
+h2 = histfit(FracCover_1Row,numBins);
 hold on;
 yt2 = get(gca,'YTick');
 set(gca,'YTick',yt2,'YTickLabel',yt2/numel(FracCover_1Row));
@@ -251,7 +251,7 @@ xlabel('Saturation');
 ylabel('Probability');
 
 figure(4);
-h_jpdf = histogram2(t_1Row,FracCover_1Row,[numBins_t,numBins_FracCover],'Normalization','probability','FaceColor','Flat','EdgeColor','none','ShowEmptyBins','on');
+h_jpdf = histogram2(t_1Row,FracCover_1Row,numBins,'Normalization','probability','FaceColor','Flat','EdgeColor','none','ShowEmptyBins','on');
 hold on;
 colorbar;
 xlabel('Time,t');
