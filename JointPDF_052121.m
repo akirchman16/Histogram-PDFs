@@ -11,7 +11,7 @@ close all;
 
 % Fig. 1 = Growth Profiles
 % Fig. 2 = Growth Profiles w/ Axes Histogram
-% Fig. 3 = Individual Histograms w/ Estimated PDFs
+% Fig. 3 = State Histograms at various times (1/4)
 % Fig. 4 = Joint Distribution Function (3D)
 
 N = 8660;   %length of DNA lattice
@@ -21,7 +21,9 @@ L_Total = 2;    %total concentration of RAD51
 k_on = 1;   %kinetic rate constant
 k_off = 1;
 Ratio = 1;   %Percentage of solution which is monomers (0 to 1)
-Iterations = 100;    %number of iterations at each ratio value
+Iterations = 50;    %number of iterations at each ratio value
+
+MaxTime = 1.25; %maximum time that each iteration will run until
 
 UncoveredLength = 0.34; %length of a DNA nt without RAD51 bound to it (according to van der Heijden paper) - nm
 CoveredLength = 0.51;   %length of a DNA nt where RAD51 is bound - nm
@@ -54,7 +56,7 @@ for Loops = 1:Iterations
 
     Equilibrium = 0;
     Events = 0;
-    while max(t(Loops,:)) < 1.25    %time value the system runs to
+    while max(t(Loops,:)) < MaxTime    %time value the system runs to
         Events = Events+1;    
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         searcH_vars = {'Left','Right','Gap_Size','Left_Available_M','Right_Available_M','Left_Available_D','Right_Available_D','Right_BindingSite_M','Right_BindingSite_D','Gaps_L2_M','Gaps_R2_M','Gaps_L2_D','Gaps_R2_D','Gap_Size2_M','Gap_Size2_D','Gap_SizeI_M','Gap_SizeI_D','Left_I_M','Left_I_D','Isolated_M','SinglyContiguous_M','Doubly_Contiguous_M','Isolated_D','SinglyContiguous_D','DoublyContiguous_D'};
@@ -231,26 +233,36 @@ xlabel('Time, t');
 ylabel('Saturation');
 title('Saturation of DNA Lattice');
 
+Range = 0.05*MaxTime;    %anything within 5% of time boundaries is accepted in histograms
+
 figure(3);
-subplot(2,1,1);
-h1 = histfit(t_1Row,numBins,'kernel');
+subplot(2,2,1); %histogram of states at 1/4 time
+histogram(FracCover_1Row((0.25*MaxTime)-Range <= t_1Row & t_1Row <= (0.25*MaxTime)+Range),ceil(sqrt(numel(FracCover_1Row((0.25*MaxTime)-Range <= t_1Row & t_1Row <= (0.25*MaxTime)+Range)))));
 hold on;
-yt1 = get(gca,'YTick');
-set(gca,'YTick',yt1,'YTickLabel',yt1/numel(t_1Row));
-xlim([0 inf]);
-xlabel('Time, t');
-ylabel('Probability');
-subplot(2,1,2);
-h2 = histfit(FracCover_1Row,numBins,'kernel');
-hold on;
-yt2 = get(gca,'YTick');
-set(gca,'YTick',yt2,'YTickLabel',yt2/numel(FracCover_1Row));
-xlim([0 inf]);
 xlabel('Saturation');
-ylabel('Probability');
+ylabel('Count');
+legend(['t = ', num2str(0.25*MaxTime)]);
+subplot(2,2,2); %histogram of states at 1/2 time
+histogram(FracCover_1Row((0.5*MaxTime)-Range <= t_1Row & t_1Row <= (0.5*MaxTime)+Range),ceil(sqrt(numel(FracCover_1Row((0.5*MaxTime)-Range <= t_1Row & t_1Row <= (0.5*MaxTime)+Range)))));
+hold on;
+xlabel('Saturation');
+ylabel('Count');
+legend(['t = ', num2str(0.5*MaxTime)]);
+subplot(2,2,3); %histogram of states at 3/4 time
+histogram(FracCover_1Row((0.75*MaxTime)-Range <= t_1Row & t_1Row <= (0.75*MaxTime)+Range),ceil(sqrt(numel(FracCover_1Row((0.75*MaxTime)-Range <= t_1Row & t_1Row <= (0.75*MaxTime)+Range)))));
+hold on;
+xlabel('Saturation');
+ylabel('Count');
+legend(['t = ', num2str(0.75*MaxTime)]);
+subplot(2,2,4); %histogram of states at maximum time
+histogram(FracCover_1Row(MaxTime-0.05 <= t_1Row),ceil(sqrt(numel(FracCover_1Row(MaxTime-0.05 <= t_1Row))))));
+hold on;
+xlabel('Saturation');
+ylabel('Count');
+legend(['t = ', num2str(MaxTime)]);
 
 figure(4);
-h_jpdf = histogram2(t_1Row,FracCover_1Row,numBins,'Normalization','probability','FaceColor','Flat','EdgeColor',[0.25 0.25 0.25],'ShowEmptyBins','on');
+h_jpdf = histogram2(t_1Row,FracCover_1Row,numBins,'Normalization','probability','FaceColor','Flat','EdgeColor','none','ShowEmptyBins','on');
 hold on;
 colorbar;
 xlabel('Time,t');
